@@ -5,6 +5,8 @@ import itertools
 from datetime import datetime, timezone, timedelta
 import os 
 import re 
+import threading
+from flask import Flask
 from dotenv import load_dotenv
 
 # --- CONFIGURATION ---
@@ -147,6 +149,20 @@ async def prefix_dropdown_create(ctx, *, args: str):
             ), 
             view=view
         )
+
+def run_flask():
+    app = Flask("")
+
+    @app.route("/")
+    def home():
+        return "Bot is running!"
+
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
+
+# Start Flask in a separate thread
+flask_thread = threading.Thread(target=run_flask)
+flask_thread.start()
 
 if TOKEN:
     client.run(TOKEN)
