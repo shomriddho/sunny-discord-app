@@ -151,11 +151,36 @@ async def prefix_dropdown_create(ctx, *, args: str):
         )
 
 def run_flask():
+    import psutil
     app = Flask("")
 
     @app.route("/")
     def home():
-        return "Bot is running!"
+        cpu = psutil.cpu_percent(interval=1)
+        ram = psutil.virtual_memory().percent
+        return f"""
+        <html>
+        <head>
+            <title>Gud Bot Status</title>
+            <style>
+                body {{ font-family: Arial, sans-serif; background-color: #f0f0f0; text-align: center; padding: 50px; }}
+                h1 {{ color: #333; }}
+                p {{ font-size: 18px; }}
+                .metric {{ background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); display: inline-block; margin: 10px; }}
+            </style>
+        </head>
+        <body>
+            <h1>🤖 Gud Bot Status</h1>
+            <p>Bot is running from Dhaka! 🇧🇩</p>
+            <div class="metric">
+                <strong>CPU Usage:</strong> {cpu}%
+            </div>
+            <div class="metric">
+                <strong>RAM Usage:</strong> {ram}%
+            </div>
+        </body>
+        </html>
+        """
 
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
